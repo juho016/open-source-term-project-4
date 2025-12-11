@@ -1,0 +1,7 @@
+/bestmodel
+/captcha_images
+/testimage
+/__pycache__
+*.h5
+*.tflite
+*.png
