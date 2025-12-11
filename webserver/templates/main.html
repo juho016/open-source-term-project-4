@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="main-form">
+        <form>
+            <h2 class="text-center">Captcha Solver</h2>
+            <p class="text-center bg-info">Simple Captcha Solver using TensorFlow RNN</p>
+            <p class="text-center small">AI will automatically recognizes the characters in image.</p>
+            <p class="text-center small">To test API with your own image file, <a href="/api">visit /api</a></p>
+            <div class="or-seperator"></div>
+            <br>
+            <div class="center-block">
+                <img src="{{ img_data }}" class="center-block" width="280" height="70" />
+            </div>
+            <div class="or-seperator"></div>
+            <h1 class="text-center bg-success">{{ captcha }}</h1>
+            <div class="or-seperator"></div>
+            <br>
+            <input type="button" class="btn btn-warning next-btn btn-block" onclick="location.reload();" value="Reload"></button>
+        </form>
+        <p class="text-center text-muted small">AUG 2022 by Altius</p>
+    </div>
+{% endblock %}

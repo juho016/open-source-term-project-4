@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="main-form">
+        <form>
+            <h2 class="text-center"><a href="/" style="color:black">Captcha Solver</a> <a href="/api" style="color: black;">API</a></h2>
+            <p class="text-center bg-info">TensorFlow RNN Captcha Solver API</p>
+            <p class="text-center small bg-warning">Allowed image type: 140x35xRGBA32(PNG)</p>
+            <p class="text-center small">To download random sample captcha image file, <a href="/getsample">Click HERE</a></p>
+            <div class="or-seperator"></div>
+            <br>
+            <div class="center-block">
+                <img id="uploaded_img" class="center-block" width="280" height="70"/>
+                <br>
+                <label for="upload_file" class="btn btn-success next-btn btn-block">Select Captcha File</label>
+                <input type="file" class="form-control" id="upload_file" name="upload_file" accept="image/png" style="display: none;">
+            </div>
+            <div class="or-seperator"></div>
+            <h1 class="text-center bg-success" id="captcha_result">Upload File First</h1>
+            <div class="or-seperator"></div>
+            <br>
+            <input type="button" id="submitBtn" class="btn btn-warning next-btn btn-block" value="Solve"></button>
+        </form>
+        <p class="text-center text-muted small">AUG 2022 by Altius</p>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#upload_file").on('change', function() {
+                $("#captcha_result").text("Upload File First");
+                $('#uploaded_img').removeAttr('src');
+                readURL(this);
+            });
+        });
+        $("#submitBtn").on('click', function() {
+            $("#captcha_result").text("Loading..");
+            var formData = new FormData();
+            formData.append("upload_file", $("#upload_file")[0].files[0]);
+            $.ajax({
+                url: "/api",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function onData(data) {
+                    if (data == '') {
+                        data = "No Characters"
+                    }
+                    $("#captcha_result").text(data);
+                },
+                error: function onError(error) {
+                    $("#captcha_result").text("Error");
+                }
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var filename = input.files[0].name.substr((input.files[0].name.lastIndexOf('.') + 1))
+                var filesize = input.files[0].size
+                // 5MB 파일 크기 제한
+                if (filesize > 5*1024*1024) {
+                    alert("File too Big (Max: 5MB)");
+                    return false;
+                }
+                // 확장자 제한
+                if (filename.toLowerCase() != "png") {
+                    alert("Only Accept PNG File");
+                    return false;
+                }
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#uploaded_img').attr('src', e.target.result);
+                    $("#captcha_result").text("Click Solve");
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+{% endblock %}
